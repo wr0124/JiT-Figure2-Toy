@@ -45,14 +45,10 @@ bash run_gif.sh
 
 Running `run.sh` produces:
 
-- `fig_generation_pca.png`
-- fig_generation_pca.png
-- `fig_generation_projection_matrix.png`
-- fig_generation_projection_matrix.png
-- `fig_flow_matching.png`
-- fig_flow_matching.png
-- `flow_D2_x.gif`
-- flow_D2_x.gif
+- `fig_generation_pca.png` (fig_generation_pca.png)
+- `fig_generation_projection_matrix.png`(fig_generation_projection_matrix.png)
+- `fig_flow_matching.png`(fig_flow_matching.png)
+- `flow_D2_x.gif`(flow_D2_x.gif)
 
 ## Main Config Knobs
 
