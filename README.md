@@ -53,8 +53,8 @@ Running `run.sh` produces:
 `fig_flow_matching.png`: Main flow-matching comparison figure across dimensions and parameterizations.
 <a href="./fig_flow_matching.png"><img src="./fig_flow_matching.png" alt=""></a>
 
-`flow_D2_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=2`, `param=x`.
-<a href="./flow_D2_x.gif"><img src="./flow_D2_x.gif" alt=""></a>
+`flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `param=x`.
+<a href="./flow_D16_x.gif"><img src="./flow_D16_x.gif" alt=""></a>
 
 ## Main Config Knobs
 
