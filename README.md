@@ -1,9 +1,6 @@
-# JiT-Figure2-Toy
-Reproducing Figure 2 from “Back to Basics: Let Denoising Generative Models Denoise” 
+ # JiT Toy Reproduction (2D Spiral in D-Dim)
 
-# Flow-Matching Toy Reproduction (2D Spiral in D-Dim)
-
-This repository reproduces a toy flow-matching result from Table 1 and Figure 2 of the paper.
+This repository reproduces a toy flow-matching result from Table 1 and Figure 2 of the paper “Back to Basics: Let Denoising Generative Models Denoise” 
 - ground-truth 2D spiral
 - embed to higher dimension `D`
 - train `x` / `eps` / `v` parameterizations
