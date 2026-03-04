@@ -7,7 +7,9 @@ This repository reproduces a toy flow-matching result from Table 1 and Figure 2 
 - sample back to 2D and compare quality
 - visualize time evolution as a GIF (Gaussian -> spiral)
 
-## Files
+<details>
+
+ ## Files
 
 - `trainv2.py`: main code (data, training, sampling, plotting, GIF)
 - `run.sh`: one-process full pipeline (all figures + GIF)
@@ -73,3 +75,5 @@ In `trainv2.py` inside `run_all_results_single_process(...)`:
 
 - Seed is fixed in code (`SEED = 0`) for NumPy and PyTorch.
 - Static figure and GIF can share the same initial noise for the chosen panel, so final frame matches static result better.
+  
+<details>
