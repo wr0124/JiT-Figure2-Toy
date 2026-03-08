@@ -55,15 +55,20 @@ Running `toyD2_base/run.sh` produces:
 `toyD2_base/fig_flow_matching.png`: Main flow-matching comparison figure across dimensions and parameterizations.
 <a href="./toyD2_base/fig_flow_matching.png"><img src="./toyD2_base/fig_flow_matching.png" alt=""></a>
 
-`toyD2_base/flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `x-pred`.
-<a href="./toyD2_base/flow_D16_x.gif"><img src="./toyD2_base/flow_D16_x.gif" alt=""></a>
+GIF previews (`D=16`, `x` / `eps` / `v`):
 
-`toyD2_base/flow_D16_v.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `v-pred`.
-<a href="./toyD2_base/flow_D16_v.gif"><img src="./toyD2_base/flow_D16_v.gif" alt=""></a>
+<p align="center">
+  <a href="./toyD2_base/flow_D16_x.gif"><img src="./toyD2_base/flow_D16_x.gif" alt="flow_D16_x.gif" width="31%"></a>
+  <a href="./toyD2_base/flow_D16_eps.gif"><img src="./toyD2_base/flow_D16_eps.gif" alt="flow_D16_eps.gif" width="31%"></a>
+  <a href="./toyD2_base/flow_D16_v.gif"><img src="./toyD2_base/flow_D16_v.gif" alt="flow_D16_v.gif" width="31%"></a>
+</p>
 
+Generate `eps` GIF if missing:
 
-`toyD2_base/flow_D16_eps.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `eps-pred`.
-<a href="./toyD2_base/flow_D16_eps.gif"><img src="./toyD2_base/flow_D16_eps.gif" alt=""></a>
+```bash
+cd toyD2_base
+bash run_gif.sh
+```
 
 
 ## Main Config Knobs
@@ -87,19 +92,21 @@ In `toyD2_base/train_base.py` inside `run_all_results_single_process(...)`:
 </details>
 
 
+
 <details>
 <summary>toy high dimension exploration</summary>
 
 ## High-Dimensional Setting
 
-### High-Dimensional Setting
+To study when the advantage of **x-prediction** breaks down, we extend the spiral toy experiment to a **high-dimensional setting**.
 
-To study when the advantage of **x-prediction** breaks down, we extend the toy spiral experiment to a high-dimensional setting.
+### 1. Embedding the spiral into a high-dimensional space
 
-#### 1. Embedding the spiral into a high-dimensional space
+We start from spiral samples
 
-We start with spiral samples  
+<p align="center">
 <img src="https://latex.codecogs.com/svg.image?s%20\in%20\mathbb{R}^2" />
+</p>
 
 and embed them into a \(D\)-dimensional space using a random column-orthonormal projection matrix
 
@@ -113,19 +120,21 @@ The buried spiral data becomes
 <img src="https://latex.codecogs.com/svg.image?x_{\text{base}}%20=%20P\,s%20\in%20\mathbb{R}^D" />
 </p>
 
-which lies entirely in the 2-dimensional subspace spanned by \(P\).
+which lies entirely in the **2-dimensional subspace** spanned by \(P\).
 
 ---
 
-#### 2. Adding orthogonal high-dimensional signal
+### 2. Adding orthogonal high-dimensional signal
 
-We sample Gaussian noise
+To gradually increase the intrinsic dimensionality of the dataset, we add signal in the orthogonal complement of this subspace.
+
+We first sample Gaussian noise
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.image?u%20\sim%20\mathcal{N}(0,%20I_D)" />
 </p>
 
-and remove its component in the spiral subspace
+and remove its component inside the spiral subspace
 
 <p align="center">
 <img src="https://latex.codecogs.com/svg.image?u_{\perp}%20=%20u%20-%20P(P^\top%20u)" />
@@ -137,39 +146,148 @@ The final data point is constructed as
 <img src="https://latex.codecogs.com/svg.image?x%20=%20x_{\text{base}}%20+%20\gamma\,u_{\perp}" />
 </p>
 
+The scaling factor \( \gamma \) controls the strength of the orthogonal high-dimensional signal.
+
 ---
 
-#### 3. Energy-controlled signal strength
+### 3. Energy-controlled signal strength
 
-Instead of choosing the scale factor \( \gamma \) directly, we control the signal strength with an **energy ratio**
+Instead of selecting \( \gamma \) directly, we control the signal using an **energy ratio**
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.image?\rho%20=%20\frac{\mathbb{E}\|\gamma%20u_{\perp}\|^2}{\mathbb{E}\|x_{\text{base}}\|^2}" />
+<img src="https://latex.codecogs.com/svg.image?\rho=\frac{\mathbb{E}\|\gamma%20u_\perp\|^2}{\mathbb{E}\|x_{\text{base}}\|^2}" />
 </p>
 
 Solving for \( \gamma \) gives
 
 <p align="center">
-<img src="https://latex.codecogs.com/svg.image?\gamma%20=%20\sqrt{\rho%20\frac{\mathbb{E}\|x_{\text{base}}\|^2}{\mathbb{E}\|u_{\perp}\|^2}}" />
+<img src="https://latex.codecogs.com/svg.image?\gamma=\sqrt{\rho\frac{\mathbb{E}\|x_{\text{base}}\|^2}{\mathbb{E}\|u_\perp\|^2}}" />
 </p>
+
+This formulation ensures that the **relative signal strength is controlled by \( \rho \)** rather than by the ambient dimension \(D\).
 
 ---
 
-#### Interpretation
+### Interpretation of ρ
 
 - **ρ ≈ 0** → the data remains close to a **low-dimensional manifold**
 - **ρ ≈ 1** → orthogonal signal has comparable energy to the spiral
 - **large ρ** → the dataset becomes **intrinsically high-dimensional**
 
-This controlled interpolation allows us to study how the behavior of different parameterizations (`x`, `ε`, `v`) changes as the data transitions from a **low-dimensional manifold regime** to a **truly high-dimensional signal regime**, especially when the model is **under-complete** (for example a 256-dimensional MLP operating in \(D = 512\)).
+This controlled interpolation allows us to study how the behavior of different parameterizations (`x`, `ε`, `v`) changes as the data transitions from a **low-dimensional manifold regime** to a **high-dimensional signal regime**, especially when the model is **under-complete** (e.g. a 256-dimensional MLP operating in \(D=512\)).
+
+---
+
+### Relation between ρ and γ
+
+The calibration plot below follows directly from the energy definition.
+
+Since
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\|\gamma%20u_\perp\|^2=\gamma^2\|u_\perp\|^2" />
+</p>
+
+we obtain
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\rho=\frac{\gamma^2\,\mathbb{E}\|u_\perp\|^2}{\mathbb{E}\|x_{\text{base}}\|^2}" />
+</p>
+
+Let
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?C=\frac{\mathbb{E}\|u_\perp\|^2}{\mathbb{E}\|x_{\text{base}}\|^2}" />
+</p>
+
+Then
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\rho=C\gamma^2" />
+</p>
+
+Taking logarithms gives
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\log\gamma%20=%20\frac{1}{2}\log\rho%20-%20\frac{1}{2}\log%20C" />
+</p>
+
+
+Therefore, on a **log–log plot**, the relationship between \( \log\gamma \) and \( \log\rho \) is **linear with slope \(1/2\)**.
+
+---
+
+<p align="center">
+<img src="./toy_highdim/gamma_vs_rho.png" width="60%">
+</p>
+
+<p align="center">
+Calibration curve showing the relation between the orthogonal signal scale \( \gamma \) and the energy ratio \( \rho \).
+</p>
+
+---
+
+### Effect on the intrinsic dimensionality
+
+When **ρ is small**, most of the dataset energy remains inside the **2-dimensional spiral subspace**, so the effective dimensionality stays low even when the ambient dimension \(D\) is large.
+
+As **ρ increases**, the orthogonal component introduces signal across many directions in the \(D-2\) dimensional space, increasing the **intrinsic dimension** of the data.
+
+Consequently, the prediction task becomes significantly harder for an **under-complete model**, since the model must represent meaningful structure across many more directions of the ambient space.
+
+---
+
+<p align="center">
+<img src="./toy_highdim/outputs/flow_matching_pred_all_rho_ordered.png" width="80%">
+</p>
+
+---
+
+### Exploring the joint effect of ρ and D
+
+The behavior in the high-dimensional experiment is governed by **two variables**:
+
+- the ambient dimension `D`
+- the orthogonal signal strength `ρ`
+
+Empirically, some values of `ρ` work well at both low and high dimensions, but fail at intermediate dimensions. This suggests that performance is not a function of `ρ` alone, but of the joint interaction
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\mathrm{performance}=f(D,\rho)" />
+</p>
+
+A useful interpretation is to view the construction as a **low-rank signal plus orthogonal bulk** model:
+
+- the buried spiral provides a structured 2D signal subspace
+- the orthogonal component spreads energy across `D − 2` directions
+
+At fixed total orthogonal energy `ρ`, increasing `D` spreads that energy over more orthogonal directions. This motivates testing the derived scaling variable
+
+<p align="center">
+<img src="https://latex.codecogs.com/svg.image?\alpha=\frac{\rho}{D-2}" />
+</p>
+
+which measures the approximate orthogonal energy **per direction**.
+
+To analyze this interaction, we log a distribution-level metric for each `(D, ρ, param)` pair and visualize:
+
+1. **Phase diagram**: performance heatmap over `(D, ρ)`
+2. **Error vs D** for fixed `ρ`
+3. **Error vs ρ / (D − 2)** to test whether curves collapse across dimensions
+
+As a first metric, we use a 2D **MMD** (maximum mean discrepancy) between the generated samples projected back to 2D and the ground-truth spiral. If plotting against `ρ / (D − 2)` aligns the curves better than plotting against `ρ`, this suggests that the relevant control variable is not total orthogonal energy alone, but orthogonal energy per dimension.
+
+
 
 
 ## Files
 
-- `toy_highdim/trainv3.py`: high-dimensional flow-matching experiments with `rho` sweep and summary stats
-- `toy_highdim/runv3.sh`: one-command run script for the high-dimensional sweep
-- `toy_highdim/outputs/`: generated figures and stats
-- `toy_highdim/plot2.py`: extra plotting utility for gamma-scaling analysis
+- `toy_highdim/trainv3.py` — high-dimensional flow-matching experiments with ρ sweep and statistics logging  
+- `toy_highdim/runv3.sh` — one-command run script for the sweep  
+- `toy_highdim/outputs/` — generated figures and statistics  
+- `toy_highdim/plot2.py` — additional plotting utilities
+
+---
 
 ## Quick Start
 
@@ -178,36 +296,4 @@ Run the high-dimensional sweep:
 ```bash
 cd toy_highdim
 bash runv3.sh
-```
-
-## Outputs
-
-Running `toy_highdim/runv3.sh` writes results to `toy_highdim/outputs/`:
-
-- `rho*_fig_generation_pca.png`: PCA projections of generated samples for each `rho`
-- `rho*_fig_generation_projection_matrix.png`: projection-matrix 2D views for each `rho`
-- `rho*_fig_flow_matching.png`: flow-matching comparison figure for each `rho`
-- `all_signal_stats.csv` and `all_signal_stats.txt`: per-run signal statistics (`rho`, `gamma_eff`, energy ratios, effective rank)
-- `rho_vs_gamma.png`: summary curve of effective gamma versus `rho`
-
-Default `rho` sweep in `trainv3.py`:
-
-`[0.0, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 100, 500, 1000, 2000]`
-
-## Main Config Knobs
-
-In `toy_highdim/trainv3.py` inside `run_all_results_single_process(...)`:
-
-- `Ds`: dimensions to evaluate (default run uses `(2, 8, 16, 512)`)
-- `n_points`: dataset and sampling size
-- `train_steps_map`: training steps per dimension
-- `batch_size`, `lr`, `noise_scale`
-- `sample_steps`: ODE integration steps for generation
-- `rho` (or `gamma` alias): high-dimensional orthogonal signal strength
-- `gamma_seed`: seed for the added high-dimensional signal
-- `out_dir`: output directory (default `outputs`)
-
-
-
-
 </details>
