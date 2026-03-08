@@ -7,16 +7,16 @@ from trainv2 import (
     save_time_evolution_gif,
 )
 
-D =  512
-param = "x"
+D = 16 
+param = "eps"
 n_points = 1000
-train_steps = 8001
+train_steps = 24001
 batch_size = 512
 lr = 1e-3
-noise_scale = 2.0
+noise_scale = 1.0
 sample_steps = 200
 frame_stride = 1
-out_path = "flow_D2_x.gif"
+out_path = "flow_D16_eps.gif"
 
 gt_2d = make_spiral(n_points)
 P = random_projection(D)
@@ -48,7 +48,7 @@ save_time_evolution_gif(
     frames_2d=frames_2d,
     out_path=out_path,
     gt_2d=gt_2d,
-    title_prefix=f"D={D}, param={param}",
+    title_prefix=f"D={D}, pred={param}",
     fps=10,
     point_size=1,
     fixed_xy=True,

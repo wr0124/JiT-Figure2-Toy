@@ -1,6 +1,6 @@
- # JiT Toy Reproduction (2D Spiral in D-Dim)
+# Manifold Learning: Flow-Matching Toy Reproduction (2D Spiral in D-Dim)
 
-This repository reproduces a toy flow-matching result from Table 1 and Figure 2 of the paper “Back to Basics: Let Denoising Generative Models Denoise” 
+This repo reproduces a toy flow-matching result:
 - ground-truth 2D spiral
 - embed to higher dimension `D`
 - train `x` / `eps` / `v` parameterizations
@@ -8,12 +8,13 @@ This repository reproduces a toy flow-matching result from Table 1 and Figure 2 
 - visualize time evolution as a GIF (Gaussian -> spiral)
 
 <details>
+<summary>Show usage, outputs, and config details</summary>
 
- ## Files
+## Files
 
-- `trainv2.py`: main code (data, training, sampling, plotting, GIF)
-- `run.sh`: one-process full pipeline (all figures + GIF)
-- `run_gif.sh`: GIF-only script (separate simple entrypoint)
+- `toyD2_base/train_base.py`: main code (data, training, sampling, plotting, GIF)
+- `toyD2_base/run.sh`: one-process full pipeline (all figures + GIF)
+- `toyD2_base/run_gif.sh`: GIF-only script (separate simple entrypoint)
 
 ## Requirements
 
@@ -34,33 +35,34 @@ Notes:
 Run full pipeline:
 
 ```bash
-bash run.sh
+bash toyD2_base/run.sh
 ```
 
 Run GIF-only script:
 
 ```bash
-bash run_gif.sh
+bash toyD2_base/run_gif.sh
 ```
 
 ## Outputs
 
-Running `run.sh` produces:
-`fig_generation_pca.png`: PCA-based visualization of ground truth, buried data, noise, and mixed `z_t` states for each `D`.
-<a href="./fig_generation_pca.png"><img src="./fig_generation_pca.png" alt=""></a>
+Running `toyD2_base/run.sh` produces:
 
-`fig_generation_projection_matrix.png`: Generation results projected back to 2D with the known projection matrix, comparing model parameterizations.
-<a href="./fig_generation_projection_matrix.png"><img src="./fig_generation_projection_matrix.png" alt=""></a>
+`toyD2_base/fig_generation_pca.png`: PCA-based visualization of ground truth, buried data, noise, and mixed `z_t` states for each `D`.
+<a href="./toyD2_base/fig_generation_pca.png"><img src="./toyD2_base/fig_generation_pca.png" alt=""></a>
 
-`fig_flow_matching.png`: Main flow-matching comparison figure across dimensions and parameterizations.
-<a href="./fig_flow_matching.png"><img src="./fig_flow_matching.png" alt=""></a>
+`toyD2_base/fig_generation_projection_matrix.png`: Generation results projected back to 2D with the known projection matrix, comparing model parameterizations.
+<a href="./toyD2_base/fig_generation_projection_matrix.png"><img src="./toyD2_base/fig_generation_projection_matrix.png" alt=""></a>
 
-`flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `param=x`.
-<a href="./flow_D16_x.gif"><img src="./flow_D16_x.gif" alt=""></a>
+`toyD2_base/fig_flow_matching.png`: Main flow-matching comparison figure across dimensions and parameterizations.
+<a href="./toyD2_base/fig_flow_matching.png"><img src="./toyD2_base/fig_flow_matching.png" alt=""></a>
+
+`toyD2_base/flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `param=x`.
+<a href="./toyD2_base/flow_D16_x.gif"><img src="./toyD2_base/flow_D16_x.gif" alt=""></a>
 
 ## Main Config Knobs
 
-In `trainv2.py` inside `run_all_results_single_process(...)`:
+In `toyD2_base/train_base.py` inside `run_all_results_single_process(...)`:
 
 - `n_points`: single sample-count knob (data + sampling + GIF points)
 - `train_steps_map`: training steps per `D`
@@ -75,5 +77,5 @@ In `trainv2.py` inside `run_all_results_single_process(...)`:
 
 - Seed is fixed in code (`SEED = 0`) for NumPy and PyTorch.
 - Static figure and GIF can share the same initial noise for the chosen panel, so final frame matches static result better.
-  
-<details>
+
+</details>
