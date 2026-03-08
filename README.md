@@ -1,14 +1,12 @@
 # Manifold Learning: Flow-Matching Toy Reproduction (2D Spiral in D-Dim)
 
-This repo reproduces a toy flow-matching result:
-- ground-truth 2D spiral
-- embed to higher dimension `D`
-- train `x` / `eps` / `v` parameterizations
-- sample back to 2D and compare quality
-- visualize time evolution as a GIF (Gaussian -> spiral)
+This repo reproduces a toy manifold learning based on flow-matching result :
+
+- toy 2D reproduction
+- toy high dimension exploration
 
 <details>
-<summary>Show usage, outputs, and config details</summary>
+<summary>Toy 2D reproduction</summary>
 
 ## Files
 
@@ -57,8 +55,16 @@ Running `toyD2_base/run.sh` produces:
 `toyD2_base/fig_flow_matching.png`: Main flow-matching comparison figure across dimensions and parameterizations.
 <a href="./toyD2_base/fig_flow_matching.png"><img src="./toyD2_base/fig_flow_matching.png" alt=""></a>
 
-`toyD2_base/flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `param=x`.
+`toyD2_base/flow_D16_x.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `x-pred`.
 <a href="./toyD2_base/flow_D16_x.gif"><img src="./toyD2_base/flow_D16_x.gif" alt=""></a>
+
+`toyD2_base/flow_D16_v.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `v-pred`.
+<a href="./toyD2_base/flow_D16_v.gif"><img src="./toyD2_base/flow_D16_v.gif" alt=""></a>
+
+
+`toyD2_base/flow_D16_eps.gif`: Time-evolution animation from Gaussian noise to the spiral for `D=16`, `eps-pred`.
+<a href="./toyD2_base/flow_D16_eps.gif"><img src="./toyD2_base/flow_D16_eps.gif" alt=""></a>
+
 
 ## Main Config Knobs
 
@@ -79,3 +85,13 @@ In `toyD2_base/train_base.py` inside `run_all_results_single_process(...)`:
 - Static figure and GIF can share the same initial noise for the chosen panel, so final frame matches static result better.
 
 </details>
+
+
+<details>
+<summary>toy high dimension exploration</summary>
+
+
+
+
+</details>
+

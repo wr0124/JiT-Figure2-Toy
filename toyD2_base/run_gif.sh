@@ -1,5 +1,5 @@
 python3 - <<'PY'
-from trainv2 import (
+from train_base import (
     make_spiral,
     random_projection,
     train_one,
